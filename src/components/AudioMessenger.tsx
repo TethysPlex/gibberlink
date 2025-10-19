@@ -65,13 +65,13 @@ export default function AudioMessenger() {
         <Card className="w-full max-w-2xl rounded-3xl">
           <CardHeader>
             <CardTitle className="text-center text-xl">
-              Audio Messenger
+              音频信使
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-8">
             <div className="space-y-4">
               <label htmlFor="txData" className="block text-lg font-medium">
-                Message to Send
+                要发送的消息
               </label>
               <textarea
                 id="txData"
@@ -84,13 +84,13 @@ export default function AudioMessenger() {
                 size="lg"
                 className="w-full rounded-full"
               >
-                Send Message
+                发送消息
               </Button>
             </div>
 
             <div className="space-y-4">
               <label htmlFor="rxData" className="block text-lg font-medium">
-                Received Messages
+                接收到的消息
               </label>
               <div
                 id="rxData"
@@ -104,7 +104,7 @@ export default function AudioMessenger() {
                 size="lg"
                 className="w-full rounded-full"
               >
-                {isRecording ? "Stop Recording" : "Start Recording"}
+                {isRecording ? "停止录音" : "开始录音"}
               </Button>
             </div>
           </CardContent>

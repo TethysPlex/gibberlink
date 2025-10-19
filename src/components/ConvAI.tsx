@@ -226,12 +226,12 @@ export function ConvAI() {
         try {
             const hasPermission = await requestMicrophonePermission()
             if (!hasPermission) {
-                alert("No permission")
+                alert("没有麦克风权限")
                 return;
             }
             const currentAgentId = agentType === 'inbound' ? INBOUND_AGENT_ID : OUTBOUND_AGENT_ID;
             if (!currentAgentId) {
-                alert("Agent ID not configured");
+                alert("代理ID未配置");
                 return;
             }
             const signedUrl = await getSignedUrl(currentAgentId)
@@ -280,7 +280,7 @@ export function ConvAI() {
                 onMessage: handleMessage,
                 onError: (error) => {
                     console.log(error)
-                    alert('An error occurred during the conversation')
+                    alert('对话过程中发生错误')
                 },
                 onModeChange: ({mode}) => {
                     console.log('onModeChange', mode);
@@ -293,7 +293,7 @@ export function ConvAI() {
             //console.log(conversation.input.inputStream)
         } catch (error) {
             console.error('Error starting conversation:', error)
-            alert('An error occurred while starting the conversation')
+            alert('启动对话时发生错误')
         } finally {
             setIsLoading(false)
         }
@@ -352,7 +352,7 @@ export function ConvAI() {
                             onClick={conversation || isConnected || glMode ? endConversation : startConversation}
                             tabIndex={-1}
                         >
-                            {isLoading ? 'Connecting...' : (conversation || isConnected || glMode ? 'End conversation' : 'Start conversation')}
+                            {isLoading ? '连接中...' : (conversation || isConnected || glMode ? '结束对话' : '开始对话')}
                         </Button>
                     </div>
                 )}
