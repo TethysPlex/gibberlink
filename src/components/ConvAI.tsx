@@ -53,14 +53,13 @@ export function ConvAI() {
     const [conversation, setConversation] = useState<Conversation | null>(null)
     const [isConnected, setIsConnected] = useState(false)
     const [isSpeaking, setIsSpeaking] = useState(false)
-    let init_agent_type = Math.random() < 0.5 ? 'inbound' : 'outbound'
-    init_agent_type = 'inbound'
-    const [agentType, setAgentType] = useState<'inbound' | 'outbound'>(init_agent_type)
+    const initialAgentType: 'inbound' | 'outbound' = 'inbound'
+    const [agentType, setAgentType] = useState<'inbound' | 'outbound'>(initialAgentType)
     const [isLoading, setIsLoading] = useState(false)
     const [latestUserMessage, setLatestUserMessage] = useState<string>('')
     const [sessionId] = useState(() => `session_${Date.now()}_${Math.random().toString(36).slice(2)}`);
     const [llmChat, setLLMChat] = useState<Message[]>([
-        { role: 'system', content: SYSTEM_MESSAGES[agentType] }
+        { role: 'system', content: SYSTEM_MESSAGES[initialAgentType] }
     ]);
     const [glMode, setGlMode] = useState(false);
     const [isProcessingInput, setIsProcessingInput] = useState(false);
