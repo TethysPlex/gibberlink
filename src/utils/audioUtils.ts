@@ -163,7 +163,11 @@ export async function initAudio(newInputContext?: AudioContext, newInputStream?:
   }
   try {
     if (!context) {
-      context = new AudioContext({ sampleRate: 48000 });
+      const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+      if (!AudioContextClass) {
+        throw new Error('AudioContext is not supported in this browser');
+      }
+      context = new AudioContextClass({ sampleRate: 48000 });
     }
 
     
