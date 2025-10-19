@@ -66,20 +66,6 @@ export function ConvAI() {
     const [isProcessingInput, setIsProcessingInput] = useState(false);
     const audioMotionRef = useRef<AudioMotionAnalyzer | null>(null);
 
-    if (false)
-    useEffect(() => {
-        console.log('DEBUG')
-        setGlMode(true);
-        setConversation(null);
-        startRecording();
-
-        setTimeout(() => {
-            const msg = agentType === 'inbound' ? 'Hey there? how are you?' : 'Hello hello AI-buddy!'
-            setLatestUserMessage(msg)
-            sendAudioMessage(msg, agentType === 'inbound');
-        }, 5000);
-    }, [])
-
 
     const endConversation = useCallback(async () => {
         console.log('endConversation called, conversation state:', conversation);
@@ -176,50 +162,64 @@ export function ConvAI() {
 
     // Initialize AudioMotion-Analyzer when glMode is activated
     useEffect(() => {
-        if (glMode && mounted) {
-            const context = getcontext();
-            if (!context) {
-                console.log('no context exiting') 
-                return;
-            }
-
-            // Create global analyzer node if not exists
-            createAnalyserNode();
-            const analyserNode = getAnalyserNode();
-            if (!analyserNode) {
-                console.log('Failed to create analyser node');
-                return;
-            }
-
-            // Initialize AudioMotion-Analyzer
-            if (!audioMotionRef.current) {
-                const container = document.getElementById('audioviz');
-                if (!container) return;
-
-                audioMotionRef.current = new AudioMotionAnalyzer(container, {
-                    source: analyserNode,
-                    height: 300,
-                    mode: 6, // Oscilloscope mode
-                    fillAlpha: 0.7,
-                    lineWidth: 2,
-                    showScaleX: false,
-                    showScaleY: false,
-                    reflexRatio: 0.2,
-                    showBgColor: false,
-                    showPeaks: true,
-                    gradient: agentType === 'inbound' ? 'steelblue' : 'orangered',
-                    smoothing: 0.7,
-                });
-            }
-
-            return () => {
-                if (audioMotionRef.current) {
-                    audioMotionRef.current.destroy();
-                    audioMotionRef.current = null;
-                }
-            };
+        if (!mounted) {
+            return;
         }
-    }, [glMode, mounted]);
+
+        if (!glMode) {
+            if (audioMotionRef.current) {
+                audioMotionRef.current.destroy();
+                audioMotionRef.current = null;
+            }
+            return;
+        }
+
+        const context = getcontext();
+        if (!context) {
+            console.log('no context exiting');
+            return;
+        }
+
+        createAnalyserNode();
+        const analyserNode = getAnalyserNode();
+        if (!analyserNode) {
+            console.log('Failed to create analyser node');
+            return;
+        }
+
+        const gradient = agentType === 'inbound' ? 'steelblue' : 'orangered';
+
+        if (!audioMotionRef.current) {
+            const container = document.getElementById('audioviz');
+            if (!container) return;
+
+            audioMotionRef.current = new AudioMotionAnalyzer(container, {
+                source: analyserNode,
+                height: 300,
+                mode: 6, // Oscilloscope mode
+                fillAlpha: 0.7,
+                lineWidth: 2,
+                showScaleX: false,
+                showScaleY: false,
+                reflexRatio: 0.2,
+                showBgColor: false,
+                showPeaks: true,
+                gradient,
+                smoothing: 0.7,
+            });
+        } else {
+            audioMotionRef.current.setOptions({
+                gradient,
+            });
+        }
+
+        return () => {
+            if (audioMotionRef.current) {
+                audioMotionRef.current.destroy();
+                audioMotionRef.current = null;
+            }
+        };
+    }, [agentType, glMode, mounted]);
 
     async function startConversation() {
         setIsLoading(true)
